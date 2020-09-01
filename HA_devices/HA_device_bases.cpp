@@ -5,6 +5,8 @@
     
     Contains the HA_device library to manage the directory of devices (sensors or actors)
 
+		v2 - Sep 20 - updated
+
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or

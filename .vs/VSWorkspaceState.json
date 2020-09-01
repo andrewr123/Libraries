@@ -1,6 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\HA_devices"
   ],
+  "SelectedNode": "\\HA_devices\\HA_device_bases.cpp",
   "PreviewInSolutionExplorer": false
 }
