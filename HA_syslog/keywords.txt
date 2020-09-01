@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map Syslog
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+syslog	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+init						KEYWORD2
+adjustLevel			KEYWORD2
+setContext			KEYWORD2
+getContext			KEYWORD2
+sendLog					KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
