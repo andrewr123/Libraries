@@ -25,39 +25,22 @@
 
 // *************** IP and other comms addresses - variables here, statics in HA_globals.h *************
 
-#ifdef PITTSFOLLY
-		byte diningIP[] 								= {192, 168, 7, 178};
-		byte basementIP[] 							= {192, 168, 7, 179};
-		byte studyIP[] 									= {192, 168, 7, 180};
-		byte testIP[]										= {192, 168, 7, 181};
-		byte syslogServerIP[] 					= {192, 168, 7, 20};
-		byte gatewayIP[] 								= {192, 168, 7, 1};
-	  byte pingAddr[NUM_PINGS][4] 		= { {8, 8, 8, 8},														// Google DNS
-	  																	{212, 159, 13, 49},															// Plusnet DNS
-	  																	{212, 159, 6, 10},															// Plusnet DNS
-	  																	{208, 67, 222, 222} };													// OpenDNS
-    byte diningMac[] 								= { 0x90, 0xA2, 0xda, 0x00, 0x3c, 0x92 };   	// Pittsfolly Arduino
-    byte basementMac[] 							= { 0x90, 0xA2, 0xda, 0x00, 0x2e, 0x9B };
-    byte studyMac[]  								= { 0x90, 0xA2, 0xda, 0x00, 0x2e, 0x9C };
-    byte testMac[]									= { 0x90, 0xA2, 0xda, 0x00, 0x2e, 0x9D };
-
-	  
-#else
-		byte diningIP[] 								= {192, 168, 2, 178};
-		byte basementIP[] 							= {192, 168, 2, 178};
-		byte studyIP[] 									= {192, 168, 2, 178};
-		byte testIP[]										= {192, 168, 2, 181};
-		byte syslogServerIP[] 					= {192, 168, 2, 61};
-		byte gatewayIP[] 								= {192, 168, 2, 1};
-	  byte pingAddr[NUM_PINGS][4] 		= { {8, 8, 8, 8},														// Google DNS
-	  																	{212, 159, 13, 49},															// Plusnet DNS
-	  																	{212, 159, 6, 10},															// Plusnet DNS
-	  																	{208, 67, 222, 222} };													// OpenDNS
-		byte diningMac[] 								= { 0x90, 0xA2, 0xda, 0x00, 0x2f, 0x9A };		// Away Arduino
-		byte basementMac[] 							= { 0x90, 0xA2, 0xda, 0x00, 0x2e, 0x9A };
-		byte studyMac[]  								= { 0x90, 0xA2, 0xda, 0x00, 0x2e, 0x9A };
-		byte testMac[]  								= { 0x90, 0xA2, 0xda, 0x00, 0x2e, 0x9A };
-#endif
+byte diningIP[] 								= {192, 168, 7, 178};
+byte basementIP[] 							= {192, 168, 7, 179};
+byte studyIP[] 									= {192, 168, 7, 180};
+byte GtHallIP[]                 = {192, 168, 7, 181};
+byte testIP[]										= {192, 168, 7, 182};
+byte syslogServerIP[] 					= {192, 168, 7, 20};
+byte gatewayIP[] 								= {192, 168, 7, 1};
+byte pingAddr[NUM_PINGS][4] 		= { {8, 8, 8, 8},														// Google DNS
+	  																{212, 159, 13, 49},															// Plusnet DNS
+	  																{212, 159, 6, 10},															// Plusnet DNS
+	  																{208, 67, 222, 222} };													// OpenDNS
+byte diningMac[] 								= { 0x90, 0xA2, 0xda, 0x00, 0x3c, 0x92 };   	// Pittsfolly Arduino
+byte basementMac[] 							= { 0x90, 0xA2, 0xda, 0x00, 0x2e, 0x9B };
+byte studyMac[]  								= { 0x90, 0xA2, 0xda, 0x00, 0x2e, 0x9C };
+byte GtHallMac[]								= { 0x90, 0xA2, 0xda, 0x00, 0x2e, 0x9D };
+byte testMac[]                  = { 0x90, 0xA2, 0xda, 0x00, 0x2e, 0x9E };
 
 
 // unsigned int heartBeat;

@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\HA_devices"
+    "\\HA_channels",
+    "\\HA_root",
+    "\\HA_switcher"
   ],
-  "SelectedNode": "\\HA_devices\\HA_device_bases.cpp",
+  "SelectedNode": "\\HA_channels\\HA_channels.h",
   "PreviewInSolutionExplorer": false
 }

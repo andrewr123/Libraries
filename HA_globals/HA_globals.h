@@ -47,6 +47,7 @@ const static byte NUM_PINGS				= 4;
 extern byte diningIP[];
 extern byte basementIP[];
 extern byte studyIP[];
+extern byte GtHallIP[];
 extern byte testIP[];
 extern byte syslogServerIP[];
 extern byte gatewayIP[];
@@ -55,6 +56,7 @@ extern byte diningMac[];
 extern byte boilerMac[];
 extern byte basementMac[];
 extern byte studyMac[];
+extern byte GtHallMac[];
 extern byte testMac[];
 
 // *********** VARIABLES ******************
