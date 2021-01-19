@@ -62,11 +62,13 @@ void stolower(char *s) {
 
 
 // ************  Device type codes & methods  *********
-
+/*
 const char REGIONCODES[NUMREGIONCODES + 1] = { 'G', 'D', 'S', 'E', 'K', 'B', '/0' };          // Gt Hall, Dining, Study, External, Kitchen, Basement, null termination
 const char *DEVICETYPES[NUM_DEV_TYPES + NUM_VAR_TYPES + NUM_ZONE_TYPES + NUM_OBJ_TYPES] = { "xT", "xF", "xH", "xL", "xM", "xP", "xR", "xO", "p", "P", "D", "L", "R", "vB", "vI", "vR", "Z", "Ti", "HB" };  
 								// Sensors:  Touch, fire, heat, luminance, motion, presence, RFID, open
 								// Actors: 5a power, 13A power, lock (was 'B'), light, relay
+
+
 
 byte getDevTypeIdx (char *device) {
 	  for (int i = 0; i < NUM_DEV_TYPES; i++) {
@@ -78,7 +80,7 @@ byte getDevTypeIdx (char *device) {
 void getDevTypeChar (byte entIdx, char *entChar) {			// Returns device type, var type or zone type char string
 	strncpy (entChar, DEVICETYPES[entIdx], 3);
 }
-
+*/
 
 // *************** DayHourMinute routines - compressed form of time **************
 
@@ -95,7 +97,7 @@ unsigned int dhmMake(unsigned int dhmDay, unsigned int dhmHour, unsigned int dhm
   dhmPut(&result, VAL_DAY, dhmDay);
   dhmPut(&result, VAL_HOUR, dhmHour);
   dhmPut(&result, VAL_MINUTE, dhmMinute);
-  return result;
+  return result;     
 }
 
 unsigned int dhmAccess(unsigned int *dhmVal, byte type, unsigned int value, int flag) {           
@@ -108,23 +110,24 @@ unsigned int dhmAccess(unsigned int *dhmVal, byte type, unsigned int value, int 
   }
   
 	if (flag == READ_FLAG) {
-		unsigned int response = (unsigned int)(((*dhmVal) & mask) >> offset);
-		return (response > limit) ? 99 : response;
+		return (unsigned int)(((*dhmVal) & mask) >> offset);
 	}
   else {
-		if (value > limit) return 0;
-		else {
-			(*dhmVal) &= ~mask;                                   // Clear
-			(*dhmVal) |= (value << offset) & mask;                // Store 
-		}
-  }
+		(*dhmVal) &= ~mask;                                   // Clear
+		(*dhmVal) |= (value << offset) & mask;                // Store
+	}
 }
 
 void dhmToText(unsigned int dhm, char *responseText) {
 	const char *dayText[11] = {"Every", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Mon-Thu", "Mon-Fri", "Sat/Sun"};
 	unsigned int dayVal = dhmGet(dhm, VAL_DAY);
 		
-	snprintf(responseText, 15, "%s%s%02d%s%02d", (dayVal > 10) ? "Error" : dayText[dayVal], " ", dhmGet(dhm, VAL_HOUR), ":", dhmGet(dhm, VAL_MINUTE));
+  if (dayVal > 10) {
+      snprintf(responseText, 15, "%s%03d", "Bad day: ", dayVal);
+  }
+  else {
+      snprintf(responseText, 15, "%s %02d:%02d", dayText[dayVal], dhmGet(dhm, VAL_HOUR), dhmGet(dhm, VAL_MINUTE));
+  }
 }
 
 boolean dhmBetween(unsigned int dhmVal, unsigned int dhmFrom, unsigned int dhmTo) {
@@ -163,4 +166,34 @@ boolean dhmBetween(unsigned int dhmVal, unsigned int dhmFrom, unsigned int dhmTo
   
   // If get here then no match, so return
   return false;
+}
+
+
+// ****** Error logging ******
+
+byte errorLog[ERR_LIMIT];                           // Up to 16 hex codes stored
+unsigned int numErrors = 0;                         // Total count remains available
+
+void logError(byte errorCode) {
+    errorLog[numErrors] = errorCode;
+    if (numErrors++ >= ERR_LIMIT) numErrors = ERR_LIMIT - 1;
+}
+
+byte listErrors(char* buffer, byte bufLen) {
+
+    byte bufPosn = 0;
+    #define BUF_ADD bufPosn += snprintf(buffer + bufPosn, bufLen - bufPosn,
+
+    if (numErrors == 0) {
+        BUF_ADD "OK");
+    }
+    else {
+        BUF_ADD "%u:", numErrors);
+        for (int i = 0; (i < numErrors) && (i < ERR_LIMIT); i++) BUF_ADD "%02x ", errorLog[i]);
+        numErrors = 0;
+    }
+
+    BUF_ADD "\0");
+
+    return bufPosn;
 }

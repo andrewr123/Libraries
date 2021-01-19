@@ -1,10 +1,11 @@
 {
   "ExpandedNodes": [
     "",
+    "\\Bitstring",
     "\\HA_channels",
     "\\HA_root",
     "\\HA_switcher"
   ],
-  "SelectedNode": "\\HA_channels\\HA_channels.h",
+  "SelectedNode": "\\Bitstring\\Bitstring.h",
   "PreviewInSolutionExplorer": false
 }

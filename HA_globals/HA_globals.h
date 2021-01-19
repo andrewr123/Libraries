@@ -20,22 +20,28 @@
 */
 
 #ifndef HA_globals_h
-#define HA_globals_h
 
+#define HA_globals_h
 #include "Arduino.h"
+
+
+//#define DEBUG
+
+
+#if defined GREAT_HALL_CONTROLLER
+#define NUM_TEMP_SENSORS 1
+#elif defined BOILER_CONTROLLER
+#define NUM_TEMP_SENSORS 6
+#elif defined DINING_CONTROLLER
+#define NUM_TEMP_SENSORS 4
+#else 
+#define NUM_TEMP_SENSORS 6
+#endif // GREAT_HALL
 
 
 // *************** IP and other comms addresses - statics here, variables in HA_globals.cpp *************
 
-#define PITTSFOLLY
-
-#ifdef PITTSFOLLY
-	const static unsigned int syslogServerPort = 514;		
-#else
-	const static unsigned int syslogServerPort = 514;
-#endif
-
-
+const static unsigned int syslogServerPort = 514;		
 
 const static unsigned int UdpNTPPort = 8888;      					// port for NTP time comms
 const static unsigned int UdpLogPort = 8889;      					// port for syslog (in practice not used, as syslog is send only)
@@ -62,11 +68,7 @@ extern byte testMac[];
 // *********** VARIABLES ******************
 
 extern char *globalContext;
-extern byte syslogLevel;
-extern boolean sendToSyslog;
-// extern unsigned int heartBeat;
 extern char meName[];
-
 
 // *********** CONSTANTS *****************
 
@@ -362,6 +364,15 @@ unsigned int dhmMake(unsigned int dhmDay, unsigned int dhmHour, unsigned int dhm
 unsigned int dhmAccess(unsigned int *dhmVal, byte type, unsigned int value, int flag);
 void dhmToText(unsigned int dhm, char *responseText);
 boolean dhmBetween(unsigned int dhmVal, unsigned int dhmFrom, unsigned int dhmTo);
+
+// ****** Error logging ******
+
+static const byte ERR_LIMIT = 16;
+extern byte errorLog[ERR_LIMIT];                           // Up to 16 hex codes stored
+extern unsigned int numErrors;                         // Total count is available
+
+void logError(byte errorCode);
+byte listErrors(char* buffer, byte bufLen);
 
 #endif
 

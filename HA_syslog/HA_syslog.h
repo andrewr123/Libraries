@@ -80,6 +80,7 @@ class HA_syslog {
 			void sendLog(char sev, char *tag, byte num);
 			void sendLog(char sev, char *tag, unsigned int num);
 			void sendLog(char sev, char *tag, int num);
+			void sendLog(char sev, char* tag, float num);
 			void sendLog(char sev, char *tag, unsigned int num, char *format);
 
 	    

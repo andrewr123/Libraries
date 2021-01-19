@@ -58,12 +58,24 @@ void HA_syslog::getContext(char *buffer, int maxLen) {
 }
  
 void HA_syslog::sendLog(char sev, char *tag, char *message) {	
+
 	char buffer[UDP_TX_PACKET_MAX_SIZE];
 	int bufPosn;
 	char path[30];
 	const byte facility = 1;														// Default - user level messages 
 	byte severity = strchr(severityCodes, sev) - severityCodes;
-	
+
+	/*
+	Serial.print("Syslog message = ");
+	Serial.println(message);
+	Serial.print("Syslog ask = ");
+	Serial.print(sev);
+	Serial.print(" = ");
+	Serial.println(severity);
+	Serial.print("Threshold = ");
+	Serial.println(_syslogLevel);
+	*/
+
 	if (severity > _syslogLevel) return;								// Exit if lower priority than threshold
 
 	_contextStack.peekAll(path, 30);
@@ -109,6 +121,18 @@ void HA_syslog::sendLog(char sev, char *tag, int num) {
 	char buffer[20];
 	snprintf(buffer, 20, "%d", num);
 	sendLog(sev, tag, buffer);
+}
+
+void HA_syslog::sendLog(char sev, char* tag, float num) {
+		// Float not implemented in snprintf, so convert to two ints first
+		char buffer[20];
+		unsigned int leftA, rightA;											
+
+		leftA = (unsigned int)num;											// Take the integer portion
+		rightA = (num - (float)leftA) * 100;						// Subtract the integer portion from the total, then decimal shift
+		snprintf(buffer, 20, "%u.%u", leftA, rightA);		// Format for string
+
+		sendLog(sev, tag, buffer);
 }
 
 void HA_syslog::sendLog(char sev, char *tag, unsigned int num, char *format) {

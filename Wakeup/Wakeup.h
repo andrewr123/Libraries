@@ -36,11 +36,12 @@
 #ifndef Wakeup_h
 #define Wakeup_h
 
-#include "Arduino.h"  
+#include "Arduino.h"
+
 //#include "HA_syslog.h"     
 
-static const byte MAXSLEEPERS 					= 32;							// Max 64k, but unworkable (out of memory and would take too long). Tested with 256; 16-32 generally enough
-static const byte MAXPENDING 						= 32;							// Needs to be large enough to hold max number of sleepers woken in one go, assuming prompt clearance by runAnyPending()
+static const byte MAXSLEEPERS 					= 12;							// Max 64k, but unworkable (out of memory and would take too long). Tested with 256; 16-32 generally enough
+static const byte MAXPENDING 						= 8;							// Needs to be large enough to hold max number of sleepers woken in one go, assuming prompt clearance by runAnyPending()
 static const unsigned int MAXHEARTBEAT 	= 8350;						// in ms.  Round down from absolute max of 8,388,480 us (Timer1 limit)   4,294,967,295
 static const byte CODEOVERHEAD 					= 8; 							// Logic analyser-determined to allow for duration of WAKEUP code; calibrated @ 10mS with 8 sleepers
 static const unsigned long MAX_SECONDS	= 4294967;				// Base units always held as ms in unsigned long (4,294,967,295 ms)

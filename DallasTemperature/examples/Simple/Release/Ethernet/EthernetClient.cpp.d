@@ -1,0 +1,32 @@
+C:\Users\andre\AppData\Local\Temp\VMBuilds\Simple\MegaCore_2560\Release\Ethernet\EthernetClient.cpp.o: \
+ C:\Users\andre\OneDrive\Documents\Arduino\libraries\Ethernet\EthernetClient.cpp \
+ C:\Users\andre\OneDrive\Documents\Arduino\libraries\Ethernet\utility/w5100.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\libraries\SPI\src/SPI.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/Arduino.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/binary.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/WCharacter.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/WString.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/HardwareSerial.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/Stream.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/Print.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/Printable.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/USBAPI.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/Arduino.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/wiring_extras.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\variants\100-pin-arduino-mega/pins_arduino.h \
+ C:\Users\andre\OneDrive\Documents\Arduino\libraries\Ethernet\utility/socket.h \
+ C:\Users\andre\OneDrive\Documents\Arduino\libraries\Ethernet/utility/w5100.h \
+ C:\Users\andre\OneDrive\Documents\Arduino\libraries\Ethernet\Ethernet.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/IPAddress.h \
+ C:\Users\andre\OneDrive\Documents\Arduino\libraries\Ethernet\EthernetClient.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/Print.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/Client.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/IPAddress.h \
+ C:\Users\andre\OneDrive\Documents\Arduino\libraries\Ethernet\EthernetServer.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/Server.h \
+ C:\Users\andre\OneDrive\Documents\Arduino\libraries\Ethernet\Dhcp.h \
+ C:\Users\andre\OneDrive\Documents\Arduino\libraries\Ethernet\EthernetUdp.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/Udp.h \
+ C:\Users\andre\AppData\Local\arduino15\packages\MegaCore\hardware\avr\2.0.3\cores\MCUdude_corefiles/Stream.h \
+ C:\Users\andre\OneDrive\Documents\Arduino\libraries\Ethernet\Dns.h \
+ C:\Users\andre\OneDrive\Documents\Arduino\libraries\Ethernet/EthernetUdp.h

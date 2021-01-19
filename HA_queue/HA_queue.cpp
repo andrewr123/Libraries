@@ -266,6 +266,7 @@ int BYTESTRING::get(unsigned int byteNum) {
 
 
 void BYTESTRING::clearAll() {
+
 	memset(_buffer, 0x00, _bufLen);
 }
 

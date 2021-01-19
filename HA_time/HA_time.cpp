@@ -135,7 +135,7 @@ void askNtpServers(void *dummy) {												// Re-entrant routine to get time f
 				}
 			}
 			break;
-		default: SENDLOG('W', "Invalid mode", _context.mode);
+		default: SENDLOG('E', "Invalid mode", _context.mode);
 	}
 	RESTORE_CONTEXT
 }
@@ -202,7 +202,7 @@ void calcTime() {																							// Decide on and store the reading, then
 			newTime = epoch[bestFit];		
 	}
 
-	if (sendToSyslog) SENDLOG('N', "NTP time = ", newTime);
+	SENDLOG('I', "NTP time = ", newTime);
   
 	// Update master time variable - protect from interrupts, as not running inside ISR
 	byte oldSREG = SREG;

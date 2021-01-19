@@ -66,6 +66,7 @@
 
 #include "Wakeup.h"
 #include "TimerOne.h"
+#include "HA_globals.h"
 
 
 void WAKEUP::init() {		// Constructor not possible due to dependency on Timer1
@@ -121,7 +122,7 @@ boolean WAKEUP::addSleeper( void (*sleeper)(void*), unsigned long delay, void *c
   
   return true;  
 }
-
+/*
 void WAKEUP::printBunks() {
 	Serial.print("Heartbeat: ");
 	Serial.print(_heartbeat);
@@ -151,7 +152,7 @@ void WAKEUP::printBunks() {
 		Serial.print(", context: ");
 		Serial.println((unsigned int)_bunks[i].context, HEX);
 	}
-	/*
+	
 	for (int i = 0; i < _numPending; i++) {
 		Serial.print("Pending: ");
 		Serial.print(i);
@@ -165,8 +166,9 @@ void WAKEUP::printBunks() {
 		Serial.print(", context: ");
 		Serial.println((unsigned int)_pending[i].context, HEX);
 	}
-	*/
+	
 }
+*/
 
 void WAKEUP::startHeartbeat() {      // Set heartbeat to longest required to wake lightest sleeper
   _heartbeat = MAXHEARTBEAT;
