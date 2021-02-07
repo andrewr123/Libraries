@@ -196,7 +196,7 @@ void calcTime() {																							// Decide on and store the reading, then
 		case 1:
 		case 2:
 		case 3:
-			SENDLOG('N', "Low votes: ", numResponses);					// . . and fall thru
+			//SENDLOG('N', "Low votes: ", numResponses);					// . . and fall thru
 		case 4:
 		case 5:																								// Perfect
 			newTime = epoch[bestFit];		

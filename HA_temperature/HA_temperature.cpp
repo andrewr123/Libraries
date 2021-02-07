@@ -64,12 +64,6 @@ boolean HA_temperature::init(byte pin, byte targetPrecision, byte pollingFreq) {
 
         // Reset the bus and get the address of the first (& only) device to determine ROM family
         if (oneWire[_sensorID].reset()) {
-#ifdef DEBUG
-            byte bufPosn = 0;
-            const byte BUFLEN = 64;
-            char buffer[BUFLEN];
-            #define BUF_ADD bufPosn += snprintf(buffer + bufPosn, BUFLEN - bufPosn, 
-#endif
 
             byte deviceBuffer[8];                      // Onewire device buffer - contains family code (ROM_FAMILY), device ID (not used here) & CRC
             byte configuration;
@@ -78,6 +72,10 @@ boolean HA_temperature::init(byte pin, byte targetPrecision, byte pollingFreq) {
             oneWire[_sensorID].readROM(deviceBuffer);
 
 #ifdef DEBUG
+            byte bufPosn = 0;
+            const byte BUFLEN = 64;
+            char buffer[BUFLEN];
+            #define BUF_ADD bufPosn += snprintf(buffer + bufPosn, BUFLEN - bufPosn, 
             BUF_ADD "Sensor %u pin %u ROM: ", _sensorID, pin);
             for (int i = 0; i < 8; i++) BUF_ADD "%02x", deviceBuffer[i]);
             BUF_ADD "\0");
@@ -85,7 +83,7 @@ boolean HA_temperature::init(byte pin, byte targetPrecision, byte pollingFreq) {
             SENDLOGM('D', buffer);
 #endif
 
-            if (oneWire[_sensorID].crc8(deviceBuffer, ROM_CRC) != deviceBuffer[ROM_CRC]) {
+            if (oneWire[_sensorID].crc8(deviceBuffer, ROM_CRC) != deviceBuffer[ROM_CRC]) {          // TODO - loop on timeout
                 logError(0xA1);
                 releaseBus(_sensorID);
                 RESTORE_CONTEXT
@@ -108,7 +106,7 @@ boolean HA_temperature::init(byte pin, byte targetPrecision, byte pollingFreq) {
                         default:		configuration = TEMP_9_BIT; s_convTime[_sensorID] = T_CONV_9_BIT;  break;
                     }
 
-                    setBit(&s_DS18S20, _sensorID, false);                
+                    setBit(&s_DS18S20, _sensorID, false);                   // For clarity - redundant as initialised to zero   
 
                     // Set desired resolution - have to write all three bytes of scratchpad, but as alarm function not used first two can be random
                     oneWire[_sensorID].reset();
@@ -120,7 +118,6 @@ boolean HA_temperature::init(byte pin, byte targetPrecision, byte pollingFreq) {
 
                     // Check precision has taken
                     if (readPrecision(_sensorID) != targetPrecision) {
-                        logError(0xA2);
                         releaseBus(_sensorID);
                         RESTORE_CONTEXT
                         return false;
@@ -152,7 +149,7 @@ boolean HA_temperature::init(byte pin, byte targetPrecision, byte pollingFreq) {
                 return true;
             }
             else {
-                logError(0xA4);
+                logError(0xA5);
                 RESTORE_CONTEXT
                 return false;
             }
@@ -209,7 +206,7 @@ void HA_temperature::scheduleTempC(byte sensorID) {
     */
 
     // Select appropriate stage of processing depending on how far through the read process has got
-    switch (getBit(&s_conversionState, sensorID)) {
+    switch (getBit(s_conversionState, sensorID)) {
 
         case RESET_SENSOR:                    // Initial state
 
@@ -229,12 +226,12 @@ void HA_temperature::scheduleTempC(byte sensorID) {
             setBit(&s_conversionState, sensorID, GET_TEMP);
 
             // . .  which happens in s_convTime ms.  If error, then reset state and release bus
-            //int convTime = (getBit(&s_DS18S20, sensorID)) ? T_CONV_DS18S20 : T_CONV_DS18B20[targetPrecision - 9];   // Index into array for DS18B20
+            //int convTime = (getBit(s_DS18S20, sensorID)) ? T_CONV_DS18S20 : T_CONV_DS18B20[targetPrecision - 9];   // Index into array for DS18B20
 
             wakeup.cancelWakeup((void (*)(void*))scheduleTempC, s_convTime[sensorID], (void*)sensorID, TREAT_AS_NORMAL);
             
             if (!wakeup.wakeMeAfter((void (*)(void*))scheduleTempC, s_convTime[sensorID], (void*)sensorID, TREAT_AS_NORMAL)) {
-                logError(0xA5);
+                logError(0xAE);
                 setBit(&s_conversionState, sensorID, RESET_SENSOR);
                 releaseBus(sensorID);
             }
@@ -254,7 +251,7 @@ void HA_temperature::scheduleTempC(byte sensorID) {
                 // Load the temperature to single variable and add extra resolution if needed
                 int reading = (((int)scratchpad[TEMP_MSB]) << 8) | scratchpad[TEMP_LSB];
 
-                if (getBit(&s_DS18S20, sensorID)) {			                    // Fixed 9 bit resolution expandable using 'extended resolution temperature' algorithm
+                if (getBit(s_DS18S20, sensorID)) {			                    // Fixed 9 bit resolution expandable using 'extended resolution temperature' algorithm
                     reading = reading >> 1;                                 // Truncate 0.5C bit 
                     tempC = (float)reading - 0.25 + ((float)(16 - scratchpad[COUNT_REMAIN]) / 16); 
                 }
@@ -274,7 +271,7 @@ void HA_temperature::scheduleTempC(byte sensorID) {
                 char buffer[BUFLEN];
                 #define BUF_ADD bufPosn += snprintf(buffer + bufPosn, BUFLEN - bufPosn, 
                 
-                BUF_ADD "Sensor %u (%s). Scratchpad: ", sensorID, (getBit(&s_DS18S20, sensorID)) ? "18S" : "18B");
+                BUF_ADD "Sensor %u (%s). Scratchpad: ", sensorID, (getBit(s_DS18S20, sensorID)) ? "18S" : "18B");
                 for (int i = 0; i < 9; i++) BUF_ADD "%02x", scratchpad[i]);
                 BUF_ADD " reading: %u\0", (unsigned int)tempC);
                 Serial.println(buffer);
@@ -284,17 +281,21 @@ void HA_temperature::scheduleTempC(byte sensorID) {
             else {
                 tempC = ERR_TEMP;
             }
-
-            // Allow one transient error
-            if (tempC == ERR_TEMP && !getBit(&s_sensorError, sensorID)) {       // If 1st error then flag but don't record it; on 2nd error will fall through and record ERR_TEMP
-                setBit(&s_sensorError, sensorID, true);
+            
+            // Take stock
+            if (tempC == ERR_TEMP) {                            // Allow one transient error without reporting it       
+                if (!getBit(s_sensorError, sensorID)) {
+                    setBit(&s_sensorError, sensorID, true);
+                }
+                else {
+                    logError(0xe1);
+                }
             }
-            else {                                                              // Save the reading for access by getTempC() - bus is locked, but need to avoid clash with getTempC() when writing float
-                if (tempC == ERR_TEMP) logError(0xe1);
-                noInterrupts();
-                s_tempC[sensorID] = tempC;
-                interrupts();
-                setBit(&s_sensorError, sensorID, false);
+            else {                                              // Got a good reading; record it and clear error flag
+                    noInterrupts();                             // Avoid clash with getTempC() when writing float
+                    s_tempC[sensorID] = tempC;
+                    interrupts();
+                    setBit(&s_sensorError, sensorID, false);
             }
 
             // All done.  Wakeup will automatically repeat the process, so just need to set the state and hand back the bus to others
@@ -345,8 +346,8 @@ void HA_temperature::releaseBus(byte sensorID) {
 // One Wire helper functions - run with bus locked
 // -----------------------------------------------
 
-boolean HA_temperature::getBit(volatile byte* flags, byte sensorID) {
-    return (*flags & _BV(sensorID)) ? true : false;
+boolean HA_temperature::getBit(volatile byte flags, byte sensorID) {
+    return (flags & _BV(sensorID)) ? true : false;
 }
 
 void HA_temperature::setBit(volatile byte* flags, byte sensorID, boolean state) {
@@ -366,7 +367,7 @@ byte HA_temperature::readPrecision(byte sensorID) {
 
     byte scratchpad[9];
 
-    if (s_DS18S20 & _BV(sensorID)) {     // DS18S20 has only one precision
+    if (getBit(s_DS18S20, sensorID)) {     // DS18S20 has only one precision
         return 9;
     }
     else {                              // DS18B20 or DS1822 have configurable precision
@@ -380,28 +381,36 @@ byte HA_temperature::readPrecision(byte sensorID) {
             }
         }
         else {
-            logError(0xc1);
-            return 0;          // Error reading scratchpad
+            return 0;          // Error reading scratchpad, error coe in readScratchPad
         }
     }
 }
 
 boolean HA_temperature::readScratchPad(byte sensorID, byte* scratchpad) {
 
-    // Read the scratchpad
-    if (oneWire[sensorID].reset()) {
-        oneWire[sensorID].skip();
-        oneWire[sensorID].write(READSCRATCH);
+    const byte LIMIT = 4;
+    byte counter = 0;
 
-        for (int i = 0; i < 9; i++) scratchpad[i] = oneWire[sensorID].read();
+    while (readScratch(&oneWire[sensorID], scratchpad) && counter++ < LIMIT) {
+        if (oneWire[sensorID].crc8(scratchpad, SCRATCHPAD_CRC) == scratchpad[SCRATCHPAD_CRC]) return true;
+    }
 
-        // Check CRC
-        if (oneWire[sensorID].crc8(scratchpad, SCRATCHPAD_CRC) != scratchpad[SCRATCHPAD_CRC]) {
-            return false;
-        }
-        else return true;
+    // Fall through on error or timeout
+    return false;
+}
+
+
+boolean HA_temperature::readScratch(OneWire* wire, byte* scratchpad) {
+    if (wire->reset()) {
+        wire->skip();
+        wire->write(READSCRATCH);
+
+        for (int i = 0; i < 9; i++) scratchpad[i] = wire->read();
+
+        return true;
     }
     else {
+        logError(0xcb);
         return false;
     }
 }

@@ -105,7 +105,7 @@ class HA_temperature
     // Used to allocate unique sensorID for each member - initialised to zero in HA_temperature.cpp & incremented on member instantiation
     static byte s_nextSensorID;                      
     
-    // Flags - bit-wise, indexed by sensorID
+    // Flags - bit-wise, indexed by sensorID.  NB: limit of 8 sensors
     static volatile byte s_sensorInUse;                      // To allow co-operative access to sensor bus
     static volatile byte s_DS18S20;                          // Bit set if DS18S20, which needs additional processing
     static volatile byte s_conversionState;                  // Controls state/process path through scheduleTempC
@@ -125,11 +125,12 @@ class HA_temperature
     static boolean reserveBus(byte sensorID);               // Used to control semaphore access to the bus
     static void releaseBus(byte sensorID);
 
-    static boolean getBit(volatile byte* flags, byte sensorID);                    // Used to get/set the main processing (scheduleTempC) state
+    static boolean getBit(volatile byte flags, byte sensorID);                    // Used to get/set the main processing (scheduleTempC) state
     static void setBit(volatile byte* flags, byte sensorID, boolean state);
 
     static byte readPrecision(byte sensorID);               // Helper functions in support of scheduleTempC
     static boolean readScratchPad(byte sensorID, byte* scratchpad);
+    static boolean readScratch(OneWire *wire, byte* scratchpad);
   
 };
 
